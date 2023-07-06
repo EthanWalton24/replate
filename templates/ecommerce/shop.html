@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% load ecommerce_extras %}
+
+
+{% block content %}
+<div class="row">
+    <nav class="navbar nav-col body-height col-12 col-sm-3 col-md-3 col-lg-2 justify-content-center d-flex d-sm-inline-block pt-0 pt-sm-5 border-end">
+        <div class="nav-item nav-opt-active mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">All</div>
+        <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">Artist1</div>
+        <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6" style="padding: 0 5px;" role="button">Artist2</div>
+    </nav>
+
+    <div class="main-col body-height col-12 col-sm-9 col-md-9 col-lg-10">
+        
+    </div>
+</div>
+
+<script>
+    $('.navbar div').click(function() {
+        $('.navbar div').removeClass('nav-opt-active').addClass('nav-opt')
+        $(this).addClass('nav-opt-active').removeClass('nav-opt')
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% load static %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+
+    <div class="container-fluid justify-content-between">
+
+
+        <button class="navbar-toggler order-1 order-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a class="navbar-brand order-0 order-sm-1" onclick="window.location.href='/'" role="button">Replate</a>
+
+        <div class="collapse navbar-collapse order-1 order-sm-0" id="navbarSupportedContent">
+            <div class="navbar-nav" id="nav-links">
+                {% if request.path == '/shop/' %}
+                    <a class="nav-item nav-link active" onclick="window.location.href='/shop/'" role="button">Shop</a>
+                    <a class="nav-item nav-link" onclick="window.location.href='/contact/'" role="button">Contact</a>
+                {% elif request.path == '/contact/' %}
+                    <a class="nav-item nav-link" onclick="window.location.href='/shop/'" role="button">Shop</a>
+                    <a class="nav-item nav-link active" onclick="window.location.href='/contact/'" role="button">Contact</a>
+                {% else %}
+                    <a class="nav-item nav-link" onclick="window.location.href='/shop/'" role="button">Shop</a>
+                    <a class="nav-item nav-link" onclick="window.location.href='/contact/'" role="button">Contact</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="collapse navbar-collapse order-2 justify-content-end" id="navbarSupportedContent">
+            <div class="navbar-nav d-inline-block" role="button">
+                <a class="nav-item" onclick="window.location.href='https://twitter.com/'" role="button"><i class="fa-brands fa-twitter fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i></a>
+                <a class="nav-item" onclick="window.location.href='https://instagram.com/'" role="button"><i class="fa-brands fa-instagram fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i></a>
+                <a class="nav-item" onclick="window.location.href='/cart/'" role="button"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i><span id="cart-count">0</span></a>
+            </div>
+        </div>
+        
+    </div>
+
+</nav>

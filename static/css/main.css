@@ -1,0 +1,55 @@
+.nav-opt {
+    color: rgba(0,0,0,.6);
+    font-weight: 500;
+    transition: .5s ease;
+} .nav-opt:hover, .nav-opt-active {
+    color: black;
+    font-weight: 500;
+}
+
+.body-height {
+    height: calc(100vh - 56px);
+}
+
+#cart-count {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    color: black;
+    border: 1px solid black;
+    border-radius: 9px;
+    background-color: white;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    text-align: center;
+}
+
+
+
+
+/* > small breakpoint */
+@media screen and (min-width: 575px) {
+    .border-end-sm {
+        border-right: none;
+    }
+    .nav-col {
+        border-bottom: none;
+    }
+}
+
+/* < small breakpoint */
+@media screen and (max-width: 575px) {
+    .border-end-sm {
+        border-right: 1px solid #dee2e6;
+    }
+    .nav-col {
+        height: 40px;
+        border-bottom: 1px solid rgba(0,0,0,.1);
+    }
+    .main-col {
+        height: calc(100vh - 106px);
+    }
+}
