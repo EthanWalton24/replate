@@ -15,8 +15,15 @@ def home(request):
 
 
 def shop(request):
+    products = Product.objects.all()
+    return render(request, 'ecommerce/shop.html', {'products': products})
 
-    return render(request, 'ecommerce/shop.html')
+
+
+def product(request,productSlug):
+    product = Product.objects.get(slug=productSlug)
+
+    return render(request, 'ecommerce/product.html')
 
 
 

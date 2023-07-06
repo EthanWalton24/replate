@@ -1,10 +1,19 @@
+.noev {
+    pointer-events: none;
+}
 .nav-opt {
     color: rgba(0,0,0,.6);
     font-weight: 500;
-    transition: .5s ease;
+    transition: .25s ease;
 } .nav-opt:hover, .nav-opt-active {
     color: black;
     font-weight: 500;
+}
+.card {
+    transition: background-color .25s ease;
+}
+.card:hover {
+    background-color: rgb(225, 225, 225) !important;
 }
 
 .body-height {
@@ -37,6 +46,10 @@
     }
     .nav-col {
         border-bottom: none;
+        width: 150px;
+    }
+    .main-col {
+        width: calc(100% - 150px);
     }
 }
 

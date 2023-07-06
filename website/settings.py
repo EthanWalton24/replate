@@ -123,6 +123,9 @@ class Dev(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/4.2/howto/static-files/
+    MEDIA_URL = 'media/'
+
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'serve/media/')
 
     STATIC_URL = 'static/'
 

@@ -4,21 +4,58 @@
 
 {% block content %}
 <div class="row">
-    <nav class="navbar nav-col body-height col-12 col-sm-3 col-md-3 col-lg-2 justify-content-center d-flex d-sm-inline-block pt-0 pt-sm-5 border-end">
+
+    <nav class="navbar nav-col body-height col-12 col-sm-3 col-md-3 col-lg-2 justify-content-center pt-0 pt-sm-5 d-flex d-sm-inline-block border-end">
         <div class="nav-item nav-opt-active mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">All</div>
-        <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">Artist1</div>
-        <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6" style="padding: 0 5px;" role="button">Artist2</div>
+        <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">Hip-Hop/Rap</div>
+        <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">R&B/Soul</div>
+        <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">Pop</div>
+        <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6" style="padding: 0 5px;" role="button">Dance</div>
     </nav>
 
-    <div class="main-col body-height col-12 col-sm-9 col-md-9 col-lg-10">
-        
+    <div class="main-col body-height col-12 col-sm-9 col-md-9 col-lg-10" style="overflow-y: scroll;">
+        <div class="row">
+
+            {% for product in products %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-0 border-bottom border-end" data-category="{{ product.category }}">
+                    <div class="card rounded-0 border-0 p-3">
+                        <div class="container p-3 noev">
+                            <img src="{{product.image.url}}" width="100%">
+                        </div>
+                        <h6 class="d-flex mb-1 mt-1 noev">{{ product.name }}</h6>
+                        <h8 class="d-flex mb-1 noev">${{ product.price }}</h8>
+                        <div class="btn btn-dark rounded-0" onclick="window.location.href='/product/{{ product.slug }}'" role="button">View</div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
     </div>
+
 </div>
 
+
+
 <script>
+    function filterProducts(category) {
+        product_containers = document.getElementsByClassName('main-col')[0].getElementsByClassName('row')[0].children
+        for (let i=0; i<product_containers.length; i++) {
+            if (category == 'All') {
+                product_containers[i].classList.remove('d-none')
+            }
+            else if (product_containers[i].getAttribute('data-category') == category) {
+                product_containers[i].classList.remove('d-none')
+            } else {
+                product_containers[i].classList.add('d-none')
+            }
+        }
+    }
+
     $('.navbar div').click(function() {
+        var category = this.innerText
         $('.navbar div').removeClass('nav-opt-active').addClass('nav-opt')
         $(this).addClass('nav-opt-active').removeClass('nav-opt')
+        filterProducts(category)
     })
 </script>
 {% endblock %}
