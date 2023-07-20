@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% load ecommerce_extras %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 pb-5 bg-gradient" style="background-color: rgb(0, 162, 255);">
+            <div class="btn btn-dark mt-3 rounded-0" onclick="window.history.back()">Back</div>
+            <div class="text-center pt-2 text-light" style="font-size: 40px; font-weight: 550; font-family: Inter,sans-serif;">Contact History</div>
+        </div>
+
+        {% if contact_requests %}
+            {% for contact in contact_requests %}
+                <div class="card p-3">
+                    <h6 class="ps-1 pb-3 noev">Status: {{ contact.status }}</h6>
+                    <div class="ps-1" style="font-weight: 550;">{{ contact.subject }}</div>
+                    <div class="ps-1" style="font-size: 14px; width: 100%; max-width: 800px;">{{ contact.message }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h6 class="p-4 noev">No history for the provided name and email.</h6>
+        {% endif %}
+    </div>
+{% endblock %}

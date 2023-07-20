@@ -29,13 +29,35 @@ user_model = get_user_model()
 #   return mark_safe(name)
 
 
+@register.filter
+def math(val1, args):
+    val2, type = args.split(',')
+    if 'add' in type:
+        return float(val1)+float(val2)
+    if 'sub' in type:
+        return float(val1)-float(val2)
+    if 'mult' in type:
+        return float(val1)*float(val2)
+    else:
+        return float(val1)/float(val2)
 
-# @register.simple_tag
-# def row(extra_classes=""):
-#     return format_html('<div class="row {}">', extra_classes)
-# @register.simple_tag
-# def endrow():
-#     return format_html("</div>")
+
+
+
+@register.simple_tag(takes_context=True)
+def cart_count(context):
+    if context['request'].user.is_authenticated:
+        try:
+            customer = Customer.objects.get(user=context['request'].user)
+            order = Order.objects.get(customer=customer,complete=False)
+            orderitems = OrderItem.objects.filter(order=order)
+
+            cart_count = sum([item.quantity for item in orderitems])
+            return format_html('<span id="cart-count">{}</span>', cart_count)
+        except:
+            return mark_safe('<span id="cart-count">0</span>')
+    else:
+        return mark_safe('<span id="cart-count">0</span>')
 
 
 # @register.simple_tag

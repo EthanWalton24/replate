@@ -1,3 +1,7 @@
+body {
+    min-width: 350px;
+}
+
 .noev {
     pointer-events: none;
 }
@@ -9,21 +13,47 @@
     color: black;
     font-weight: 500;
 }
-.card {
+
+.prod, .card {
+    background-color: transparent;
     transition: background-color .25s ease;
 }
-.card:hover {
-    background-color: rgb(225, 225, 225) !important;
+.prod:hover, .card:hover {
+    background-color: rgb(225, 225, 225);
+}
+
+.btn-custom-darken {
+    background-color: rgb(220,220,220);
+    color: rgba(0,0,0,.8);
+    transition: .25s ease;
+} .btn-custom-darken:hover, .btn-custom-darken-active {
+    background-color: #212529;
+    color: white;
+} .btn-custom-darken-active:hover {
+    background-color: rgb(30,30,30);
+    color: white;
+}
+
+.btn-custom-light {
+    background-color: white;
+    color: black;
+    transition: .25s ease;
+} .btn-custom-light:hover, .btn-custom-light:active {
+    background-color: #f0f0f0;
 }
 
 .body-height {
     height: calc(100vh - 56px);
 }
 
+
+.ic {
+    position: relative;
+}
 #cart-count {
     position: absolute;
-    top: 5px;
-    right: 8px;
+    top: -8px;
+    right: -4px;
     width: 18px;
     height: 18px;
     color: black;
@@ -35,7 +65,6 @@
     line-height: 16px;
     text-align: center;
 }
-
 
 
 
@@ -64,5 +93,17 @@
     }
     .main-col {
         height: calc(100vh - 106px);
+    }
+}
+
+
+
+/* < xxsmall breakpoint (for duo fold) */
+@media screen and (max-width: 400px) {
+    .d-xxs-none {
+        display: none !important;
+    }
+    .xxs-center {
+        margin: 19px 0;
     }
 }

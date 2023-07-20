@@ -1,0 +1,66 @@
+{% extends "main.html" %}
+{% load ecommerce_extras crispy_forms_tags %}
+
+
+{% block content %}
+
+    {% if message %}
+        {% if message in 'invalid email/password' %}
+            <div class="text-center" style="position: absolute; width: 100%; top: 56px; left: 0; background-color: rgb(245, 0, 0); color: white; font-family: Inter,sans-serif;">{{ message }}</div>
+        {% endif %}
+    {% endif %}
+
+    <div class="row mt-5 justify-content-center">
+        <div id="btn-cont" class="col-12 d-flex justify-content-center">
+            <div class="btn btn-custom-darken-active p-2 mx-2" style="width: 175px;" onclick="toggleType(this)">Login</div>
+            <div class="btn btn-custom-darken p-2 mx-2" style="width: 175px;" onclick="toggleType(this)">Register</div>
+        </div>
+
+        <div id="login-cont" class="form col-12 mt-5 text-center">
+            <div>Sign in with:</div>
+            <br>
+            <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-facebook-f"></i></button>
+            <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-google"></i></button>
+            <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-twitter"></i></button>
+            <br>
+            <div class="mt-2">or:</div>
+            <br>
+            <div class="row justify-content-center">
+                <div id="login-form" class="col-10 col-md-6">
+                    {% crispy login_form %}
+                </div>
+            </div>
+        </div>
+
+        <div id="register-cont" class="form col-12 mt-5 text-center d-none">
+            <div>Sign up with:</div>
+            <br>
+            <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-facebook-f"></i></button>
+            <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-google"></i></button>
+            <button type="button" class="btn btn-link btn-floating mx-1"><i class="fab fa-twitter"></i></button>
+            <br>
+            <div class="mt-2">or:</div>
+            <br>
+            <div class="row justify-content-center">
+                <div id="register-form" class="col-10 col-md-6">
+                    {% crispy register_form %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleType(ele){
+            $('#btn-cont .btn').removeClass('btn-custom-darken-active').addClass('btn-custom-darken')
+            $(ele).removeClass('btn-custom-darken').addClass('btn-custom-darken-active')
+            $('.form').addClass('d-none')
+            $(`#${ele.innerHTML.toLowerCase()}-cont`).removeClass('d-none')
+            if (ele == 'Login') {
+                $('#id_name').val('filler')
+            } else {
+                $('#id_name').val('')
+            }
+        }
+    </script>
+    
+{% endblock %}

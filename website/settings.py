@@ -50,7 +50,9 @@ class Dev(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        'ecommerce'
+        "crispy_forms",
+        "crispy_bootstrap5",
+        'ecommerce',
     ]
 
     MIDDLEWARE = [
@@ -123,6 +125,8 @@ class Dev(Configuration):
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/4.2/howto/static-files/
+    LOGIN_URL = '/login/'
+
     MEDIA_URL = 'media/'
 
     MEDIA_ROOT = os.path.join(BASE_DIR, 'serve/media/')
@@ -185,3 +189,9 @@ class Dev(Configuration):
 
 class Prod(Dev):
     DEBUG = False
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True

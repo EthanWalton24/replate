@@ -1,0 +1,15 @@
+#cart-count {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    color: black;
+    border: 1px solid black;
+    border-radius: 9px;
+    background-color: white;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    text-align: center;
+}

@@ -1,7 +1,95 @@
 {% extends "main.html" %}
-{% load ecommerce_extras %}
+{% load ecommerce_extras crispy_forms_tags %}
 
 
 {% block content %}
+    
+    <div class="btn btn-dark mt-3 rounded-0" style="position: absolute;" onclick="window.history.back()">Back</div>
+
+    <div class="row h-100 d-flex flex-wrap justify-content-center justify-content-md-start align-items-start align-items-md-center">
+
+        <div class="col-12 col-md-6 col-lg-3 order-1 order-lg-0 ps-5 mt-4 mt-md-0" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; letter-spacing: .4px;">
+            <div class="d-block d-lg-none me-5">
+                <div class="row">
+                    <div class="col-6 col-md-8 pb-3">
+                        <div style="font-size: 18px;">{{ product.name }}</div>
+                        <div style="font-size: 15px;">{{ product.artist }}</div>
+                    </div>
+                    <div class="col-6 col-md-4 pb-3">
+                        <div id="price" class="float-end" style="font-size: 13px;">${{ product.price|math:".01,sub" }} USD</div>
+                    </div>
+                    <div class="col-12 pb-5">
+                        {% crispy product_form %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-none d-lg-block" style="font-size: 18px;">{{ product.artist }}</div>
+            <div class="d-none d-lg-block" style="font-size: 15px;">{{ product.name }}</div>
+            <br class="d-none d-lg-block">
+            <div class="d-block pb-3" style="font-size: 13px;">ITEM INFO:</div>
+            <ul style="font-size: 13px;">
+                <li>100% Aluminum poster</li>
+                <li>High-quality metal print</li>
+                <li>Magnetic mounting</li>
+            </ul>
+            <br>
+            <div style="font-size: 13px;">Made in the USA</div>
+            <br class="d-block d-md-none">
+            <br class="d-block d-md-none">
+            <br class="d-block d-md-none">
+            <br class="d-block d-md-none">
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-6 order-0 order-lg-1 mt-5 pt-3 text-center mt-4 mt-md-0">
+            <img src="{{product.image.url}}" height="80%" style="max-width: 90%;">
+        </div>
+
+        <div class="col-3 order-2 order-lg-2 ps-0 pe-5 px-xl-5 d-none d-lg-block">
+            <div class="row" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;">
+                <div class="col-12 pb-3">
+                    <div style="font-size: 13px;">${{ product.price }} USD</div>
+                </div>
+                <div class="col-12">
+                    {% crispy product_form %}
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <script>
+
+        window.onload = function() {
+            $('select').each(function() {
+                if ($(this).attr('name') == 'size') {
+                    $(this).prepend("<option value='M' selected disabled>Select a Size</option>")
+                }
+            });
+        }
+
+        $('#id_size').on('change', function() {
+            if (this.value == 'L') {
+                $('#price').text(`$${ {{ product.price|math:"2,mult"|math:".01,sub" }} } USD`)
+            }else if (this.value == 'XL') {
+                $('#price').text(`$${ {{ product.price|math:"3,mult"|math:".01,sub" }} } USD`)
+            }else {
+                $('#price').text(`$${ {{ product.price|math:".01,sub" }} } USD`)
+            }
+        })
+    </script>
+
+    {% if not user.is_authenticated %}
+        <script>
+            var submit_buttons = document.querySelectorAll('input.btn')
+            console.log(submit_buttons)
+            
+            for (let i=0; i<submit_buttons.length; i++) {
+                submit_buttons[i].type = 'text'
+                submit_buttons[i].onclick = function() {window.location.href='/login/'}
+            }
+        </script>
+    {% endif %}
 
 {% endblock %}

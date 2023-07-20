@@ -5,7 +5,7 @@
 {% block content %}
 <div class="row">
 
-    <nav class="navbar nav-col body-height col-12 col-sm-3 col-md-3 col-lg-2 justify-content-center pt-0 pt-sm-5 d-flex d-sm-inline-block border-end">
+    <nav class="navbar nav-col body-height col-12 col-sm-3 col-md-3 col-lg-2 justify-content-center pt-0 pt-sm-5 d-flex d-sm-inline-block border-end bg-gradient">
         <div class="nav-item nav-opt-active mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">All</div>
         <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">Hip-Hop/Rap</div>
         <div class="nav-item nav-opt mt-2 pl-1 pr-1 fs-6 border-end-sm" style="padding: 0 5px;" role="button">R&B/Soul</div>
@@ -17,16 +17,19 @@
         <div class="row">
 
             {% for product in products %}
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3 p-0 border-bottom border-end" data-category="{{ product.category }}">
-                    <div class="card rounded-0 border-0 p-3">
-                        <div class="container p-3 noev">
-                            <img src="{{product.image.url}}" width="100%">
+                <div class="prod col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 p-0 p-lg-2 px-xl-4 border-bottom border-end" data-category="{{ product.category }}">
+                    <div class="card rounded-0 border-0 p-3 h-100">
+                        <div class="row justify-content-center">
+                            <div class="col-10 col-md-12 p-3 p-lg-1 noev">
+                                <img src="{{product.image.url}}" width="100%">
+                            </div>
                         </div>
-                        <h6 class="d-flex mb-1 mt-1 noev">{{ product.name }}</h6>
-                        <h8 class="d-flex mb-1 noev">${{ product.price }}</h8>
+                        <h6 class="d-flex mb-0 mt-1 noev" style="font-size: 16px; height: 18px; line-height: 16px;">{{ product.name }}</h6>
+                        <h8 class="d-flex mb-3 noev" style="font-size: 14px;">{{ product.artist }}</h8>
                         <div class="btn btn-dark rounded-0" onclick="window.location.href='/product/{{ product.slug }}'" role="button">View</div>
                     </div>
                 </div>
+                
             {% endfor %}
 
         </div>
@@ -51,7 +54,7 @@
         }
     }
 
-    $('.navbar div').click(function() {
+    $('.nav-col div').click(function() {
         var category = this.innerText
         $('.navbar div').removeClass('nav-opt-active').addClass('nav-opt')
         $(this).addClass('nav-opt-active').removeClass('nav-opt')

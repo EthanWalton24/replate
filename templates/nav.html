@@ -1,4 +1,4 @@
-{% load static %}
+{% load static ecommerce_extras %}
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
 
     <div class="container-fluid justify-content-between">
@@ -27,9 +27,10 @@
 
         <div class="collapse navbar-collapse order-2 justify-content-end" id="navbarSupportedContent">
             <div class="navbar-nav d-inline-block" role="button">
-                <a class="nav-item" onclick="window.location.href='https://twitter.com/'" role="button"><i class="fa-brands fa-twitter fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i></a>
-                <a class="nav-item" onclick="window.location.href='https://instagram.com/'" role="button"><i class="fa-brands fa-instagram fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i></a>
-                <a class="nav-item" onclick="window.location.href='/cart/'" role="button"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i><span id="cart-count">0</span></a>
+                <a class="ic nav-item" onclick="window.location.href='https://twitter.com/'" role="button"><i class="fa-brands fa-twitter fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i></a>
+                <a class="ic nav-item" onclick="window.location.href='https://instagram.com/'" role="button"><i class="fa-brands fa-instagram fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i></a>
+                <a class="ic nav-item" onclick="window.location.href='/account/'" role="button"><i class="fa-solid fa-user fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i></a>
+                <a class="ic nav-item" onclick="window.location.href='/cart/'" role="button"><i class="fa-solid fa-cart-shopping fa-lg" style="color: #ffffff; line-height: inherit !important; padding: 0 5px;"></i>{% cart_count %}</a>
             </div>
         </div>
         

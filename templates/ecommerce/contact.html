@@ -1,7 +1,71 @@
 {% extends "main.html" %}
-{% load ecommerce_extras %}
+{% load ecommerce_extras crispy_forms_tags %}
 
 
 {% block content %}
 
+    <div class="row">
+
+        <div class="col-12 pb-5 bg-gradient" style="background-color: rgb(0, 162, 255);">
+            <div class="text-center pt-5 text-light" style="font-size: 40px; font-weight: 550; font-family: Inter,sans-serif;">Contact Us</div>
+            <div class="text-center pt-1" style="font-size: 16px; font-family: Inter,sans-serif;">
+                <div class="d-inline ps-1 pe-2 border-end text-light">Support</div>
+                <div class="d-inline ps-1 pe-2 border-end text-light">Request Custom Poster</div>
+                <div class="d-inline text-light">Returns</div>
+            </div>
+        </div>
+
+        {% if message %}
+            {% for m in message %}
+                {% if m in 'Message Sent,Session Expired' %}
+                    <div class="text-center" style="{% if m == 'Message Sent'%}background-color: rgb(0, 245, 0);{% else %}background-color: rgb(245, 0, 0); color: white;{% endif %} font-family: Inter,sans-serif;">{{ m }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <div id="contact" class="col-12 col-lg-7 pb-5 border-end border-bottom">
+            <div class="noev pt-5" style="font-size: 22px; font-weight: 550;">Get in Touch</div>
+            <div class="noev pt-2 pb-4" style="font-size: 16px; color: #636363">Please fill out the form below. <span class="d-none d-sm-inline">We will do our best to respond within 1 business day.</span></div>
+            <div class="row">
+                <div class="col-10 col-lg-9 col-xl-7">  
+                    {% crispy contact_form %}
+                </div>
+            </div>
+        </div>
+
+
+        <div id="contact_hist" class="col-12 col-lg-5">
+            <div class="noev pt-5" style="font-size: 22px; font-weight: 550;">Contact History</div>
+            <div class="noev pt-2 pb-4" style="font-size: 16px; color: #636363">Please fill out the form below to view past contact.</div>
+            <div class="row">
+                <div class="col-10 col-lg-9 col-xl-7">  
+                    {% crispy contact_history_form %}
+                </div>
+            </div>
+        </div>
+
+        <div id="footer" class="col-12"></div>
+        
+    </div>
+
+
+    <script>
+        function resize() {
+            if (window.innerWidth > 991) {
+                $('#contact').css('height', 'calc(100vh - 186px - 56px)')
+                $('#footer').css('height', '0px')
+            } else {
+                $('#contact').css('height', 'fit-content')
+                $('#footer').css('height', 'calc(60vh - 280px)')
+            }
+        }
+        window.onload = function() {
+            $('#id_purpose').prepend("<option value='Support' selected disabled>Select a Purpose</option>")
+            resize()
+        }
+        window.onresize = function() {
+            resize()
+        }
+    </script>
+    
 {% endblock %}
