@@ -3,5 +3,184 @@
 
 
 {% block content %}
-<div class="btn btn-dark" onclick="window.location.href='/logout/'">logout</div>
+<div id="main-cont" class="row">
+    <div class="col-12 text-center mt-5">
+        <div>
+            <h2>My Account</h2>
+        </div>
+        <div class="pt-2">
+            <button class="acc-nav-btn btn btn-custom-darken-active" data-val="Profile">Profile</button>
+            <button class="acc-nav-btn btn btn-custom-light" data-val="History">Order History</button>
+            <button class="acc-nav-btn btn btn-custom-light" onclick="window.location.href='/logout/'" data-val="Logout">Logout</button>
+        </div>
+    </div>
+
+    <div id="Profile" class="col-12">
+        <div class="row">
+
+            <div class="col-12 col-lg-4 mt-5" style="height: fit-content;">
+                <div class="position-relative position-lg-fixed px-3 px-sm-5" style="width: inherit;">
+                    <div id="info-display" class="row m-0">
+                        <h4 class="pt-3 pb-2">Account Info</h4>
+                        <div class="col-12 py-3 border-top">
+                            <div class="d-inline-block" style="width: 100px; font-size: 15px; font-weight: 550;">FIRST NAME</div>
+                            <div class="d-inline-block">{{ request.user.first_name }}</div>
+                        </div>
+                        <div class="col-12 py-3 border-top">
+                            <div class="d-inline-block" style="width: 100px; font-size: 15px; font-weight: 550;">LAST NAME</div>
+                            <div class="d-inline-block">{{ request.user.last_name }}</div>
+                        </div>
+                        <div class="col-12 py-3 border-top">
+                            <div class="d-inline-block" style="width: 100px; font-size: 15px; font-weight: 550;">EMAIL</div>
+                            <div class="d-inline-block">{{ request.user.email }}</div>
+                        </div>
+                        <div class="col-12 py-3 border-top px-0">
+                            <button class="btn btn-custom-darken-active" style="width: 100%; font-size: 15px; font-weight: 550;" onclick="$('#info-form').removeClass('d-none');$('#info-display').addClass('d-none')">EDIT</button>
+                        </div>
+                    </div>
+            
+                    <form id="info-form" class="d-none" method="post" action="/account/">
+                        {% csrf_token %}
+                        <input type="hidden" name="which" value="profile">
+                        <div class="row m-0">
+                            <h4 class="pt-3 pb-2">Account Info</h4>
+                            <div class="col-12 py-3 border-top">
+                                <div class="d-inline-block" style="width: 110px; font-size: 15px; font-weight: 550;">FIRST NAME</div>
+                                <input class="border-0 border-bottom" style="width: calc(100% - 115px);" type="text" name="first_name" value="{{ request.user.first_name }}" required>
+                            </div>
+                            <div class="col-12 py-3 border-top">
+                                <div class="d-inline-block" style="width: 110px; font-size: 15px; font-weight: 550;">LAST NAME</div>
+                                <input class="border-0 border-bottom" style="width: calc(100% - 115px);" type="text" name="last_name" value="{{ request.user.last_name }}" required>
+                            </div>
+                            <div class="col-12 py-3 border-top">
+                                <div class="d-inline-block" style="width: 110px; font-size: 15px; font-weight: 550;">EMAIL</div>
+                                <input class="border-0 border-bottom" style="width: calc(100% - 115px);" type="email" name="email" value="{{ request.user.email }}" required>
+                            </div>
+                            <div class="col-12 py-3 border-top">
+                                <div class="d-inline-block" style="width: 110px; font-size: 15px; font-weight: 550;">New Password</div>
+                                <input class="border-0 border-bottom" style="width: calc(100% - 115px);" type="password" name="password">
+                            </div>
+                            <div class="col-12 py-3 border-top px-0">
+                                <button type="submit" class="btn btn-custom-darken-active" style="width: 100%; font-size: 15px; font-weight: 550;">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    
+            <div class="col-12 col-lg-8 my-5 pb-5 px-3 px-sm-5" id="shipping-addresses">
+                <div class="row m-0">
+                    <h4 class="pt-3 pb-2">Shipping Addresses</h4>
+                    {% if shipping_addresses %}
+                        {% for address in shipping_addresses %}
+                            <div class="btn btn-dark p-1 mb-3" style="text-align: left;">
+                                <form method="post" action="/account/">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="which" value="delete-shipping">
+                                    <input type="hidden" name="address" value="{{ address }}">
+                                    <div class="d-inline-block ps-2" style="width: calc(100% - 50px); line-height: 42px; overflow: hidden; white-space: nowrap;">{{ address.address_line_1 }} <span class="d-none d-sm-inline">{{ address.address_line_2 }}</span><span class="d-none d-md-inline">, {{ address.city }}, {{ address.state }} {{ address.zipcode }}</span></div>
+                                    <button type="submit" class="trash-cont border-0 float-end px-3 py-2" style="background-color: transparent;"><i class="trash fa-solid fa-trash"></i></button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="card py-2">
+                        <div class="pt-2 mb-3" style="font-size: 15px; font-weight: 550;">Add New Shipping Address</div>
+                        <form method="post" action="/account/">
+                            {% csrf_token %}
+                            <input type="hidden" name="which" value="add-shipping">
+
+                            <div class="form-floating d-inline-block mt-2" style="width: calc(50% - 2.5px);">
+                                <input class="form-control" type="text" name="first_name" id="first_name" placeholder="First Name" required>
+                                <label for="first_name">First Name</label>
+                            </div>
+                            <div class="form-floating d-inline-block mt-2" style="width: calc(50% - 2.5px);">
+                                <input class="form-control" type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+                                <label for="last_name">Last Name</label>
+                            </div>
+                            <div class="form-floating mt-2">
+                                <input class="form-control" type="tel" name="phone" id="phone" placeholder="Phone" required>
+                                <label for="phone">Phone</label>
+                            </div>
+                            <div class="form-floating d-inline-block mt-2" style="width: calc(100% - 185px);">
+                                <input class="form-control" type="tel" name="address" id="address" placeholder="Address" required>
+                                <label for="address">Address</label>
+                            </div>
+                            <div class="form-floating d-inline-block mt-2" style="width: 180px;">
+                                <input class="form-control" type="tel" name="apt" id="apt" placeholder="Apt, Suite" required>
+                                <label for="apt">Apt, Suite</label>
+                            </div>
+                            <div class="form-floating d-inline-block mt-2" style="width: calc((100% / 3) - 3px);">
+                                <input class="form-control" type="tel" name="city" id="city" placeholder="City" required>
+                                <label for="city">City</label>
+                            </div>
+                            <div class="form-floating d-inline-block mt-2" style="width: calc((100% / 3) - 3px);">
+                                <input class="form-control" type="tel" name="state" id="state" placeholder="State" required>
+                                <label for="state">State</label>
+                            </div>
+                            <div class="form-floating d-inline-block mt-2" style="width: calc((100% / 3) - 3px);">
+                                <input class="form-control" type="tel" name="zip" id="zip" placeholder="Zip" required>
+                                <label for="zip">Zip</label>
+                            </div>
+
+                            <button class="btn btn-custom-darken mt-3" style="width: 100%;">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="History" class="col-12 d-none">
+        <h4 class="pt-3 px-3 px-sm-5 pb-2 mt-5">Order History</h4>
+        <div class="row px-3 px-sm-5 flex-column" style="height: calc(100vh - 160px - 93px - 56px);">
+                    
+            {% if orders|length > 0 %}
+                {% for order in orders %}
+                    <div class="col-12 m-2 py-2 px-3 bg-dark text-light text-start border-top">
+                        <div class="row">
+                            <div class="col-6 col-md-3 mb-4 mb-md-2">
+                                <div style="font-weight: 550;">Order Number:</div>
+                                <span class="border-bottom" onclick="window.location.href='/order/{{ order.order_number }}'" role="button">{{ order.order_number }}</span>
+                            </div>
+                            <div class="col-6 col-md-3 mb-4 mb-md-2">
+                                <div class="float-center float-md-start">
+                                    <div style="font-weight: 550;">Status:</div>
+                                    <span class="" role="button">{{ order.status }}</span>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3 mb-4 mb-md-2">
+                                <div style="font-weight: 550;">Order Total:</div>
+                                <span class="" role="button">${{ order.get_total }}</span>
+                            </div>
+                            <div class="col-6 col-md-3 mb-4 mb-md-2">
+                                <button class="btn btn-light float-center float-md-end rounded-0" style="width: 100%; max-width: 150px; font-weight: 550; margin-top: 10px;" onclick="window.location.href='/order/{{ order.order_number }}'">View Shipment</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                <div class="col-12 pb-5 align-self-center text-center">
+                    <div style="font-size: 26px; font-weight: 550;">You Have No Previous Orders</div>
+                    <button class="btn btn-custom-darken mb-5" onclick="window.location.href='/'">Go to Shop</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+        
+    
+</div>
+
+
+<script>
+    $('.acc-nav-btn').click(function() {
+        $('.acc-nav-btn').removeClass('btn-custom-darken-active').addClass('btn-custom-light')
+        $(this).addClass('btn-custom-darken-active').removeClass('btn-custom-light')
+        $("#main-cont > div:not(:first-child)").addClass('d-none')
+        $(`#${$(this).attr('data-val')}`).removeClass('d-none')
+    })
+</script>
 {% endblock %}

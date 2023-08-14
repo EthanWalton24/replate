@@ -4,15 +4,15 @@
 
 {% block content %}
 
-    {% if cart_items %}
-        <div class="row ps-0 ps-md-3 ps-lg-5">
+    {% if order.get_items|length > 0 %}
+        <div class="row ps-0 ps-md-3 ps-lg-5 pb-5">
             <div class="col-12 mb-3 mt-3">
                 <div style="font-size: 38px; font-weight: 550;">Shopping Cart</div>
             </div>
         
-            <div class="col-12 col-md-7 col-lg-8 px-4 pb-4 mx-md-0">
+            <div class="col-12 col-md-7 col-lg-8 px-4 pb-4 mb-5 mx-md-0">
 
-                {% for item in cart_items %}
+                {% for item in order.get_items %}
                     <form method="post">
                         {% csrf_token %}
                         <input type="hidden" name="product" value="{{ item.product }}">
@@ -20,7 +20,7 @@
                         <div class="row {% if forloop.counter0 == 0 %}border-top{% endif %} border-bottom justify-content-between" style="height: 100px;">
                             <div class="col-auto col-sm-4 col-md-6 col-lg-4 p-2 px-0 h-100 d-inline" onclick="window.location.href='/product/{{ item.product.slug }}'" role="button">
                                 <img src="{{item.product.image.url}}" height="100%" class="d-xxs-none" style="max-width: 100%;">
-                                <div class="align-middle ms-3 xxs-center d-inline-block">
+                                <div class="align-middle ms-3 xxs-center d-inline-block" style="max-width: 100px;">
                                     <div class="pb-1" style="font-size: 12px; letter-spacing: .3px; line-height: 12px; color: rgb(100, 100, 100);">{{ item.product.artist }}</div>
                                     <div style="font-size: 15px; letter-spacing: .3px; line-height: 15px; height: 30px; font-weight: 550;">{{ item.product.name }}</div>
                                     <div style="font-size: 15px; letter-spacing: .3px; line-height: 15px; font-weight: 550;">{{ item.size }}</div>
@@ -56,7 +56,7 @@
                             <div class="ms-4" style="font-size: 15px; font-weight: 550;">Items {{ len_items }}</div>
                         </div>
                         <div class="col-6 ps-0 mb-2">
-                            <div class="item-total me-4 text-end" style="font-size: 15px; font-weight: 550;">${{ order_total }}</div>
+                            <div class="item-total me-4 text-end" style="font-size: 15px; font-weight: 550;">${{ order.get_total }}</div>
                         </div>
                         <div class="col-6 pe-0 mb-2">
                             <div class="ms-4" style="font-size: 15px; font-weight: 550;">Shipping</div>
@@ -68,14 +68,14 @@
                             <div class="ms-4" style="font-size: 15px; font-weight: 550;">Taxes</div>
                         </div>
                         <div class="col-8 ps-0 mb-2">
-                            <div class="code-total me-4 text-end" style="font-size: 15px; font-weight: 550;">-</div>
+                            <div class="taxes-total me-4 text-end" style="font-size: 15px; font-weight: 550;">-</div>
                         </div>
                         <div class="col-12">
                             <div class="mt-3 mb-2 mx-4" style="font-size: 15px; font-weight: 550;">Shipping</div>
-                            <select name="shipping" class="select form-select mx-4" style="width: calc(100% - 48px);" id="id_shipping" onchange="update_total()">
-                                <option value="USPS Ground" selected>USPS Ground- $5.00</option>
+                            <select name="shipping" class="select form-select mx-4" style="width: calc(100% - 48px);" id="id_shipping" onchange="update_totals()">
+                                <option value="Ground" selected>USPS Ground- $5.00</option>
                                 <option value="Priority">Priority- $10.00</option>
-                                <option value="Priority Express">Priority Express- $30.00</option>
+                                <option value="Express">Priority Express- $30.00</option>
                             </select>
                         </div>
                         <div class="col-12" style="position: relative;">
@@ -89,15 +89,79 @@
                             <div class="ms-4 mt-4 pt-1 border-top" style="font-size: 15px; font-weight: 550;">Total Price</div>
                         </div>
                         <div class="col-6 ps-0 mb-2">
-                            <div class="order-total me-4 mt-4 pt-1 border-top text-end" style="font-size: 15px; font-weight: 550;">${{ order_total }}</div>
+                            <div class="order-total me-4 mt-4 pt-1 border-top text-end" style="font-size: 15px; font-weight: 550;">${{ order.get_total }}</div>
                         </div>
                         <div class="col-12 mb-4">
-                            <div class="btn btn-custom-light mx-4 mt-2" style="width: calc(100% - 48px); font-size: 15px; font-weight: 500;" onclick="goToPayment()">Checkout</div>
+                            <div class="btn btn-custom-light mx-4 mt-2" style="width: calc(100% - 48px); font-size: 15px; font-weight: 500;" onclick="$('#summary-box').addClass('d-none');$('#shipping-box').removeClass('d-none')">Go to Shipping</div>
                         </div>
                     </div>
 
+
+                    <form onsubmit="$('#shipping-box').addClass('d-none');$('#payment-box').removeClass('d-none');event.preventDefault()">
+                        <div id="shipping-box" class="row bg-dark px-4 d-none" style="color: white;">
+                            <div class="btn btn-custom-light p-0 text-center" style="width: 70px; position: absolute; top: 8px; left: -4px;" onclick="$('#summary-box').removeClass('d-none');$('#shipping-box').addClass('d-none')" role="button">Back</div>
+    
+                            <div class="col-12 mt-4">
+                                <div class="mt-3 mb-2 border-bottom" style="font-size: 25px; font-weight: 550;">Shipping Address</div>
+                            </div>
+    
+                            <div class="col-12">
+                                <div class="form-floating d-inline-block mt-2" style="width: calc(50% - 2.5px);">
+                                    <input class="form-control border-0 border-bottom" style="background-color: transparent; color: white;" type="text" name="first_name" id="first_name" placeholder="First Name" required>
+                                    <label for="first_name">First Name</label>
+                                </div>
+                                <div class="form-floating d-inline-block mt-2" style="width: calc(50% - 2.5px);">
+                                    <input class="form-control border-0 border-bottom" style="background-color: transparent; color: white;" type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+                                    <label for="last_name">Last Name</label>
+                                </div>
+                            </div>
+    
+                            <div class="col-12">
+                                <div class="form-floating mt-2">
+                                    <input class="form-control border-0 border-bottom" style="background-color: transparent; color: white;" type="tel" name="phone" id="phone" placeholder="Phone" required>
+                                    <label for="phone">Phone</label>
+                                </div>
+                            </div>
+    
+                            <div class="col-12 col-xl-8 pe-xl-1">
+                                <div class="form-floating d-inline-block mt-2" style="width: 100%;">
+                                    <input class="form-control border-0 border-bottom" style="background-color: transparent; color: white;" type="text" name="address" id="address" placeholder="Address" required>
+                                    <label for="address">Address</label>
+                                </div>  
+                            </div>
+    
+                            <div class="col-12 col-xl-4 ps-xl-0">
+                                <div class="form-floating d-inline-block mt-2" style="width: 100%;">
+                                    <input class="form-control border-0 border-bottom" style="background-color: transparent; color: white;" type="text" name="apt" id="apt" autocomplete="address-line2" placeholder="Apt">
+                                    <label for="apt">Apt</label>
+                                </div>
+                            </div>
+    
+                            <div class="col-12">
+                                <div class="form-floating d-inline-block mt-2" style="width: calc((100% / 3) - 3px);">
+                                    <input class="form-control border-0 border-bottom" style="background-color: transparent; color: white;" type="text" name="city" id="city" placeholder="City" required>
+                                    <label for="city">City</label>
+                                </div>
+                                <div class="form-floating d-inline-block mt-2" style="width: calc((100% / 3) - 3px);">
+                                    <input class="form-control border-0 border-bottom" style="background-color: transparent; color: white;" type="text" name="state" id="state" placeholder="State" required>
+                                    <label for="state">State</label>
+                                </div>
+                                <div class="form-floating d-inline-block mt-2" style="width: calc((100% / 3) - 3px);">
+                                    <input class="form-control border-0 border-bottom" style="background-color: transparent; color: white;" type="text" name="zip" id="zip" placeholder="Zip" required>
+                                    <label for="zip">Zip</label>
+                                </div>
+                            </div>
+    
+                            <div class="col-12 mb-4 mt-5">
+                                <button type="submit" class="btn btn-custom-light" style="width: 100%; font-size: 15px; font-weight: 500;" onclick="getTaxes($('#zip').val())">Go to Payment</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+
                     <div id="payment-box" class="row bg-dark d-none" style="color: #fff;">
-                        <div class="btn btn-custom-light m-2 mb-0 p-0 text-center" style="width: 70px;" onclick="goToSummary()" role="button">Back</div>
+                        <div class="btn btn-custom-light m-2 mb-0 p-0 text-center" style="width: 70px;" onclick="$('#shipping-box').removeClass('d-none');$('#payment-box').addClass('d-none')" role="button">Back</div>
                         <div class="col-12">
                             <div class="mt-1 mb-2 mx-4 border-bottom" style="font-size: 25px; font-weight: 550;">Payment Details</div>
                         </div>
@@ -105,7 +169,7 @@
                             <div class="ms-4" style="font-size: 15px; font-weight: 550;">Items {{ len_items }}</div>
                         </div>
                         <div class="col-6 ps-0 mb-2">
-                            <div class="item-total me-4 text-end" style="font-size: 15px; font-weight: 550;">${{ order_total }}</div>
+                            <div class="item-total me-4 text-end" style="font-size: 15px; font-weight: 550;">${{ order.get_total }}</div>
                         </div>
                         <div class="col-6 pe-0 mb-2">
                             <div class="ms-4" style="font-size: 15px; font-weight: 550;">Shipping</div>
@@ -117,16 +181,16 @@
                             <div class="ms-4 pb-2 border-bottom" style="font-size: 15px; font-weight: 550;">Taxes</div>
                         </div>
                         <div class="col-8 ps-0 mb-2">
-                            <div class="code-total me-4 pb-2 text-end border-bottom" style="font-size: 15px; font-weight: 550;">-</div>
+                            <div class="taxes-total me-4 pb-2 text-end border-bottom" style="font-size: 15px; font-weight: 550;">-</div>
                         </div>
                         <div class="col-6 pe-0 mb-4">
                             <div class="ms-4" style="font-size: 18px; font-weight: 550;">Order Total</div>
                         </div>
                         <div class="col-6 ps-0 mb-4">
-                            <div class="order-total me-4 text-end" style="font-size: 18px; font-weight: 550;">${{ order_total }}</div>
+                            <div class="order-total me-4 text-end" style="font-size: 18px; font-weight: 550;">${{ order.get_total }}</div>
                         </div>
-                        <div class="col-12 px-5">
-                            <div id="paypal-button-container"></div>
+                        <div class="col-12 px-2">
+                            <div id="paypal-button-container" class="mb-5 px-3 mx-4" style="background-color: transparent;"></div>
                         </div>
                     </div>
                 </div>
@@ -137,21 +201,43 @@
             <div class="col-12 align-self-center text-center">
                 <div style="font-size: 30px; font-weight: 550;">Your Cart is Empty</div>
                 <div class="pb-4" style="font-size: 22px;">Add something to make me happy :)</div>
-                <button class="btn btn-custom-darken" onclick="window.location.href='/shop/'">Continue Shopping</button>
+                <button class="btn btn-custom-darken" onclick="window.location.href='/'">Continue Shopping</button>
             </div>
         </div>
     {% endif %}
 
 
     <script>
+        //declare order total variables
+        var item_total,shipping_total,code_total,subtotal,tax_total,order_total;
+        update_totals()
+
+        //change color of paypal box when card opened
+        const resize_ob = new ResizeObserver(function(entries) {
+            // since we are observing only a single element, so we access the first element in entries array
+            let rect = entries[0].contentRect;
+
+            // current width & height
+            let width = rect.width;
+            let height = rect.height;
+
+            if (height > 200) {
+                $('#paypal-button-container').css('background-color','white')
+            } else {
+                $('#paypal-button-container').css('background-color','transparent')
+            }
+        });
+        resize_ob.observe(document.querySelector("#paypal-button-container"));
         
+
+        function roundToFixed2(num) {
+            return Math.round(num * 1e2) / 1e2
+        }
+
         
         function checkPromoCode() {
-            // list of valid codes
-            var code_list = {
-                            'WPFKPXNX': 5,
-                            '20OFFTODAY': 20
-                            }
+            //valid promo-codes
+            code_list = {{ codes|safe }}
                             
             // get entered code
             var code = $('#id_code').val()
@@ -165,8 +251,8 @@
                 }
 
                 // add promo code to order summary
-                $("#summary-box > div:nth-child(" + (7) + ")").after(`<div class="col-6 pe-0 mb-2"><div class="ms-4" style="font-size: 15px; font-weight: 550;">Promo Code: ${code}</div></div><div class="col-6 ps-0 mb-2"><div class="me-4 text-end" style="font-size: 15px; font-weight: 550;">-$${code_list[code]}</div></div>`);
-                $("#payment-box > div:nth-child(" + (8) + ")").after(`<div class="col-8 pe-0 mb-2"><div class="ms-4 pb-2 border-bottom" style="font-size: 15px; font-weight: 550;">Promo Code</div></div><div class="col-4 ps-0 mb-2"><div class="code-total me-4 pb-2 text-end border-bottom" style="font-size: 15px; font-weight: 550;">-$${code_list[code]}</div></div>`);
+                $("#summary-box > div:nth-child(" + (7) + ")").after(`<div class="col-6 pe-0 mb-2"><div class="promo-code ms-4" style="font-size: 15px; font-weight: 550;">Promo Code: ${code}</div></div><div class="col-6 ps-0 mb-2"><div class="me-4 text-end" style="font-size: 15px; font-weight: 550;">-$${roundToFixed2(code_list[code])}</div></div>`);
+                $("#payment-box > div:nth-child(" + (8) + ")").after(`<div class="col-8 pe-0 mb-2"><div class="ms-4 pb-2 border-bottom" style="font-size: 15px; font-weight: 550;">Promo Code</div></div><div class="col-4 ps-0 mb-2"><div class="code-total me-4 pb-2 text-end border-bottom" style="font-size: 15px; font-weight: 550;">-$${roundToFixed2(code_list[code])}</div></div>`);
                 
                 // remove invalid code message if necessary
                 if ($('#code-message').length > 0) {
@@ -174,8 +260,8 @@
                     $('#code-message').remove()
                 }
 
-                // update order total
-                update_total()
+                // update order total variables
+                update_totals()
             } 
             // show invalid code message if invalid
             else {
@@ -188,21 +274,15 @@
             $('#id_code').val('')
         }
 
-        function goToPayment() {
-            $('#summary-box').addClass('d-none')
-            $('#payment-box').removeClass('d-none')
-        }
+        function update_totals() {
+            //update shipping total display amount in summary boxes
+            $('.shipping-total').each(function() {$(this).text(`$${$('#id_shipping').find(':selected').text().split('$')[1]}`)})
+            
 
-        function goToSummary() {
-            $('#summary-box').removeClass('d-none')
-            $('#payment-box').addClass('d-none')
-        }
-
-        function update_total() {
-            var item_total = parseFloat($('.item-total').first().text().replace('$',''))
-            var shipping_total = parseFloat($('#id_shipping').find(":selected").text().split('$')[1])
-            var code_total = 0
-            var tax_total = 0
+            try {item_total = parseFloat($('.item-total').first().text().split('$')[1]); if (isNaN(item_total)) {item_total=0}} catch {item_total = 0}
+            try {shipping_total = parseFloat($('.shipping-total').first().text().split('$')[1]); if (isNaN(shipping_total)) {shipping_total=0}} catch {shipping_total = 0}
+            try {code_total = parseFloat($('.code-total').first().text().split('$')[1]); if (isNaN(code_total)) {code_total=0}} catch {code_total = 0}
+            try {tax_total = parseFloat($('.taxes-total').first().text().split('$')[1]); if (isNaN(tax_total)) {tax_total=0}} catch {tax_total = 0}
 
             if ($("#summary-box > div:nth-child(" + (8) + ")").text().includes('Promo Code')) {
                 code_total = parseFloat($("#summary-box > div:nth-child(" + (9) + ")").text().replace('$',''))
@@ -211,12 +291,30 @@
                 tax_total = parseFloat($("#summary-box > div:nth-child(" + (7) + ")").text().replace('$',''))
             }
 
-            $('.shipping-total').each(function() {$(this).text(`$${shipping_total.toFixed(2)}`)})
-            $('.order-total').each(function() {$(this).text(`$${(item_total + shipping_total + code_total + tax_total).toFixed(2)}`)})
+            subtotal = roundToFixed2(item_total + shipping_total + code_total)
+            order_total = roundToFixed2(subtotal + tax_total)
+
+
+            $('.order-total').each(function() {$(this).text(`$${order_total.toFixed(2)}`)})
         }
 
-        function get_checkout_total() {
-            return $('.order-total').first().html().replace('$','')
+
+        function getTaxes(zip) {
+            //get tax rate from api
+            $.ajax({
+                method: 'GET',
+                url: 'https://api.api-ninjas.com/v1/salestax?zip_code=' + zip,
+                headers: { 'X-Api-Key': 'NjRB49ZEsWWg2JuFhoI2OQ==Fp2W8Slnm8Oup2y1'},
+                contentType: 'application/json'
+            })
+            //add tax amount to display and update totals
+            .then(function(r){
+                tax_amount = parseFloat(r[0]['total_rate']);
+                $('.taxes-total').each(function(){
+                    $(this).text(`$${roundToFixed2(subtotal*tax_amount)}`)
+                });
+                update_totals()
+            });
         }
     </script>
 
@@ -224,6 +322,7 @@
 
     <script src="https://www.paypal.com/sdk/js?client-id=ASPUkui3wu3-tBj8iKEkO69huTzK7a5EOml5BoV1h90VsH1j7qBBGQZm82h9oJRGSB_tvWnn_Infg9Ld&currency=USD&disable-funding=paylater"></script>
     <script>
+
         paypal.Buttons({
 
             style: {
@@ -236,7 +335,31 @@
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: get_checkout_total()
+                            value: order_total,
+                            breakdown: {
+                                item_total: {
+                                    currency_code: 'USD',
+                                    value: subtotal
+                                },
+                                tax_total: {
+                                    currency_code: 'USD',
+                                    value: tax_total
+                                }
+                            }
+                        },
+                        shipping: {
+                            name: {
+                                given_name: $('#shipping-box #first-name').val(),
+                                surname: $('#shipping-box #last-name').val()
+                            },
+                            address: {
+                                address_line_1: $('#shipping-box #address').val(),
+                                address_line_2: $('#shipping-box #apt').val(),
+                                admin_area_1: $('#shipping-box #state').val(),
+                                admin_area_2: $('#shipping-box #city').val(),
+                                postal_code: $('#shipping-box #zip').val(),
+                                country_code: 'US',
+                            }
                         }
                     }]
                 });
@@ -244,9 +367,35 @@
 
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(details) {
-                    alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                    var form = $('<form class="d-none" method="post" action="/cart/"></form>')
+
+                    $(form).prepend($(`<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">`))
+
+                    $(form).prepend($(`<input type="hidden" name="which" value="confirm">`))
+
+                    $(form).prepend($(`<input type="hidden" name="completed-total" value="${order_total}">`))
+                    $(form).prepend($(`<input type="hidden" name="shipping-method" value="${$('#id_shipping').find(':selected').val()}">`))
+
+                    $(form).prepend($(`<input type="hidden" name="first_name" value="${$('#first_name').val()}">`))
+                    $(form).prepend($(`<input type="hidden" name="last_name" value="${$('#last_name').val()}">`))
+                    $(form).prepend($(`<input type="hidden" name="phone" value="${$('#phone').val()}">`))
+                    $(form).prepend($(`<input type="hidden" name="address" value="${$('#address').val()}">`))
+                    $(form).prepend($(`<input type="hidden" name="apt" value="${$('#apt').val()}">`))
+                    $(form).prepend($(`<input type="hidden" name="city" value="${$('#city').val()}">`))
+                    $(form).prepend($(`<input type="hidden" name="state" value="${$('#state').val()}">`))
+                    $(form).prepend($(`<input type="hidden" name="zip" value="${$('#zip').val()}">`))
+
+                    if (!isNaN(parseFloat($('.code-total').first().text().split('$')[1]))) {
+                        $(form).prepend($(`<input type="hidden" name="code" value="${$('.promo-code').first().text().split(': ')[1]}">`))
+                    }
+
+                    $('#payment-box').prepend($(form))
+
+                    $(form).submit()
                 });
             }
         }).render('#paypal-button-container')
     </script>
+    
+    
 {% endblock %}

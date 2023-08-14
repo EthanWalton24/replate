@@ -23,16 +23,14 @@ import ecommerce.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', ecommerce.views.home, name='home'),
+    path('accounts/', include('allauth.urls')),
+    path('', ecommerce.views.shop, name='shop'),
     path('login/', ecommerce.views.sign_in, name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('account/', ecommerce.views.account, name='account'),
-    path('shop/', ecommerce.views.shop, name='shop'),
     path('product/<productSlug>/', ecommerce.views.product, name='product'),
-    path('contact/', ecommerce.views.contact, name='contact'),
-    path('contact-history/', ecommerce.views.contact_history, name='contact_history'),
     path('cart/', ecommerce.views.cart, name='cart'),
-    path('checkout/', ecommerce.views.checkout, name='checkout'),
+    path('order/<order_number>', ecommerce.views.order, name='order'),
 ]
 
 if settings.DEBUG:

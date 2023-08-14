@@ -14,11 +14,11 @@ body {
     font-weight: 500;
 }
 
-.prod, .card {
+.prod, .prod .card {
     background-color: transparent;
     transition: background-color .25s ease;
 }
-.prod:hover, .card:hover {
+.prod:hover, .prod .card:hover {
     background-color: rgb(225, 225, 225);
 }
 
@@ -67,6 +67,13 @@ body {
 }
 
 
+.trash {
+    color: white;
+    transition: .25s ease;
+} .trash-cont:hover .trash, .trash-cont.hover .trash {
+    color: rgba(255, 0, 0,.87);
+}
+
 
 /* > small breakpoint */
 @media screen and (min-width: 575px) {
@@ -106,4 +113,11 @@ body {
     .xxs-center {
         margin: 19px 0;
     }
+}
+
+
+@media (min-width: 992px) {
+    .position-lg-fixed {
+        position: fixed !important;
+    } 
 }

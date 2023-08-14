@@ -1,0 +1,43 @@
+{% extends "main.html" %}
+{% load ecommerce_extras %}
+
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-xl-8">
+            <div class="mt-3">
+                <span style="font-size: 30px; font-weight: 550;">Order #{{ order.order_number }}</span>
+                <span class="float-end border-bottom" style="font-size: 18px; font-weight: 550; color: rgba(0,0,0,.6);" onclick="window.location.href='/account/'" role="button">Back<span class="d-none d-sm-inline-block" style="white-space: break-spaces;"> To Account</span></span>
+            </div>
+            <div class="mt-4" style="font-size: 17px; color: rgba(0,0,0,.6);">Purchased on: {{ order.date_created }}</div>
+            <div class="mt-2" style="font-size: 15px; font-weight: 700;">Order Total: ${{ order.completed_total }}</div>
+            <div class="" style="font-size: 15px; font-weight: 700;">Items: {{ order.get_items|length }}</div>
+            <div class="" style="font-size: 15px; font-weight: 700;">Status: {{ order.status }}</div>
+            <button class="btn btn-dark mt-2 rounded-0" style="width: 100%;" onclick="window.location.href='{{ order.tracking }}'">Track Shipment</button>
+            <div class="p-2 ps-3 mt-5" style="width: 100%; background-color: rgb(246, 245, 243); font-size: 16px; font-weight: 550;">Package:</div>
+        </div>
+
+        <div class="col-12 col-sm-10 col-md-6 col-xl-5 mt-5 px-4 px-md-2 px-lg-3 order-1 order-md-0">
+            {% for item in order.get_items %}
+                <div class="d-flex flex-row mb-3" style="height: 250px;">
+                    <img class="d-inline-block" src="{{item.product.image.url}}" style="height: 100%; aspect-ratio: 1 / 1.4;">
+                    <span class="ps-3" style="width: 100%;">
+                        <div class="" style="font-size: 22px; font-weight: 550;">{{ item.product.name }}</div>
+                        <div class="" style="font-size: 16px;">{{ item.product.artist }}</div>
+                        <div class="mt-2" style="font-size: 16px; color: rgba(0,0,0,.6);">Size: {{ item.size }}</div>
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-12 col-sm-10 col-md-4 col-xl-3 mt-3 mt-md-5 px-4 px-md-2 px-lg-3 order-0 order-md-1">
+            <div class="float-start float-md-end">
+                <div class="" style="font-weight: 550;">Shipped To:</div>
+                <div style="font-size: 16px;">{{ order.shipping_address.name }}</div>
+                <div style="font-size: 16px;">{{ order.shipping_address.address_line_1 }} {{ order.shipping_address.address_line_2 }}</div>
+                <div style="font-size: 16px;">{{ order.shipping_address.city }},{{ order.shipping_address.state }} {{ order.shipping_address.zip }}</div>
+                <div style="font-size: 16px;">{{ order.shipping_address.phone }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

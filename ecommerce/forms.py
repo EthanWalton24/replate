@@ -47,8 +47,7 @@ class ProductForm(forms.Form):
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Field('size', placeholder='Size'),
-            Submit('submit-cart', 'Add to Cart', css_class='btn btn-dark rounded-0', style='width: calc(50% - 3px); font-size: 11px;'),
-            Submit('submit-wishlist', 'Add to Wishlist', css_class='btn btn-light rounded-0 border-0', style='background-color: transparent; width: calc(50% - 3px); font-size: 11px;')
+            Submit('submit-cart', 'Add to Cart', css_class='btn btn-dark rounded-0', style='width: calc(100%); font-size: 11px;'),
         )
         self.helper.form_show_labels = False
 

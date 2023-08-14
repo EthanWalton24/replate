@@ -1,5 +1,5 @@
 {% load static ecommerce_extras %}
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark sticky-top">
 
     <div class="container-fluid justify-content-between">
 
@@ -12,15 +12,12 @@
 
         <div class="collapse navbar-collapse order-1 order-sm-0" id="navbarSupportedContent">
             <div class="navbar-nav" id="nav-links">
-                {% if request.path == '/shop/' %}
-                    <a class="nav-item nav-link active" onclick="window.location.href='/shop/'" role="button">Shop</a>
-                    <a class="nav-item nav-link" onclick="window.location.href='/contact/'" role="button">Contact</a>
+                {% if request.path == '/' %}
+                    <a class="nav-item nav-link active" onclick="window.location.href='/'" role="button">Shop</a>
                 {% elif request.path == '/contact/' %}
-                    <a class="nav-item nav-link" onclick="window.location.href='/shop/'" role="button">Shop</a>
-                    <a class="nav-item nav-link active" onclick="window.location.href='/contact/'" role="button">Contact</a>
+                    <a class="nav-item nav-link" onclick="window.location.href='/'" role="button">Shop</a>
                 {% else %}
-                    <a class="nav-item nav-link" onclick="window.location.href='/shop/'" role="button">Shop</a>
-                    <a class="nav-item nav-link" onclick="window.location.href='/contact/'" role="button">Contact</a>
+                    <a class="nav-item nav-link" onclick="window.location.href='/'" role="button">Shop</a>
                 {% endif %}
             </div>
         </div>

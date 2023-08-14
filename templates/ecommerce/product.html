@@ -42,7 +42,7 @@
         </div>
 
         <div class="col-12 col-md-6 col-lg-6 order-0 order-lg-1 mt-5 pt-3 text-center mt-4 mt-md-0">
-            <img src="{{product.image.url}}" height="80%" style="max-width: 90%;">
+            <img src="{{product.image.url}}" style="max-width: 90%; aspect-ratio: 1 / 1.4;">
         </div>
 
         <div class="col-3 order-2 order-lg-2 ps-0 pe-5 px-xl-5 d-none d-lg-block">
@@ -79,17 +79,5 @@
             }
         })
     </script>
-
-    {% if not user.is_authenticated %}
-        <script>
-            var submit_buttons = document.querySelectorAll('input.btn')
-            console.log(submit_buttons)
-            
-            for (let i=0; i<submit_buttons.length; i++) {
-                submit_buttons[i].type = 'text'
-                submit_buttons[i].onclick = function() {window.location.href='/login/'}
-            }
-        </script>
-    {% endif %}
 
 {% endblock %}

@@ -48,8 +48,8 @@ def math(val1, args):
 def cart_count(context):
     if context['request'].user.is_authenticated:
         try:
-            customer = Customer.objects.get(user=context['request'].user)
-            order = Order.objects.get(customer=customer,complete=False)
+            user = context['request'].user
+            order = Order.objects.get(user=user,complete=False)
             orderitems = OrderItem.objects.filter(order=order)
 
             cart_count = sum([item.quantity for item in orderitems])

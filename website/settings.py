@@ -46,6 +46,7 @@ class Dev(Configuration):
     INSTALLED_APPS = [
         'django.contrib.admin',
         'django.contrib.auth',
+        'django.contrib.sites',
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
@@ -53,6 +54,10 @@ class Dev(Configuration):
         "crispy_forms",
         "crispy_bootstrap5",
         'ecommerce',
+        'allauth',
+        'allauth.account',
+        'allauth.socialaccount',
+        'allauth.socialaccount.providers.google',
     ]
 
     MIDDLEWARE = [
@@ -109,6 +114,38 @@ class Dev(Configuration):
             'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
         },
     ]
+
+    AUTHENTICATION_BACKENDS = [
+        # Needed to login by username in Django admin, regardless of `allauth`
+        'django.contrib.auth.backends.ModelBackend',
+
+        # `allauth` specific authentication methods, such as login by e-mail
+        'allauth.account.auth_backends.AuthenticationBackend',
+    ]
+
+    SITE_ID = 1
+
+    # Provider specific settings
+    SOCIALACCOUNT_PROVIDERS = {
+        'google': {
+            # For each OAuth based provider, either add a ``SocialApp``
+            # (``socialaccount`` app) containing the required client
+            # credentials, or list them here:
+            'APP': {
+                'client_id': '170182604547-14itiuafne96go3n2q4i0bgc5avhedce.apps.googleusercontent.com',
+                'secret': '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',
+                'key': ''
+            },
+            'SCOPE': [
+                'profile',
+                'email',
+            ],
+                'AUTH_PARAMS': {
+                'access_type': 'online',
+            }
+        }
+    }
+    SOCIALACCOUNT_LOGIN_ON_GET = True
 
 
     # Internationalization
